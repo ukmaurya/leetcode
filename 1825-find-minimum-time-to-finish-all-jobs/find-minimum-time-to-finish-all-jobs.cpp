@@ -23,7 +23,7 @@ bool solve(int ind,vector<int>&jobs,vector<int> &workers,int mid){
              
                workers[i] = workers[i]-jobs[ind]; // revert the changes as we have passed by refernce , since backtracking not recursion 
          }
-         if(workers[i]==0) break;
+         if(workers[i]==0) break; // it ensures that if no job is assigned to current worker , then  no need to move to subsequent worker , so this step reduces lot of unneccesary calculation , thus prevent from TLE; 
      }
     return ans;
    
