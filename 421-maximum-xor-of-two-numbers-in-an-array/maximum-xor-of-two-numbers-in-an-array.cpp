@@ -23,7 +23,18 @@ class Trie{
         Node* node = root;
         for(int i=31 ;i>=0;i--){
            // int bit = num&(1<<i); // why it is not working ? 
-            int bit = (num>>i)&1;
+            /*
+            If num = 29 (binary 11101) and i = 3:
+1 << 3 is 00001000 (binary).
+num & 00001000 is 00001000 (binary), which is 8 in decimal, indicating the 3rd bit is 1.
+*/
+           
+            
+            int bit = num&(1<<i);
+            if(bit !=0) // apply this if u want above logic
+                bit=1;
+            else bit = 0;
+            // int bit = (num>>i)&1;
             if(!node->containsKey(bit)){
                  node->put(bit, new Node());
             }
