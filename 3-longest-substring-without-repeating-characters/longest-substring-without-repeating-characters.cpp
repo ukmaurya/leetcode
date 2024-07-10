@@ -7,7 +7,7 @@ public:
         vector<int> hash(256,0); // given that s consists of English letters, digits, symbols and spaces.
         int ans = 0;
         while(j<n){
-            hash[s[j]]++;
+            hash[s[j]]++; // since the size is 256 so no need of hash[s[j]-'a'];  
             if(hash[s[j]] == 1){
                 ans = max(ans , j-i+1);
                 j++;
