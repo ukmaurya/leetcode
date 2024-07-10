@@ -1,39 +1,37 @@
 class Solution {
 public:
     int longestOnes(vector<int>& nums, int k) {
-        // consecutive is giving hint of substring like concept => sliding window 
-        int n = nums.size();
-        int i= 0;
-        int j =0;
-        int count = k;
-        int ans = 0;
-        while(j<n){
-            if(nums[j]==1){
-                ans = max(ans, j-i+1);
-                j++;
-               
+        // consecutive keyword is giving hint that concept will of substring 
+         int n = nums.size();
+         int front = 0;
+         int end = 0;
+         int count = 0;
+         int maxi = 0;
+         while( end < n ){ // variable size sliding window 
+            if(nums[end]==0)
+              count++;
+
+            if(count<k){
+                maxi = max(maxi , end-front+1);
+                end++;
             }
-            else{
-                count--;
-                if(count>=0){
-                  ans = max(ans, j-i+1);
+            else if(count==k){
+                  maxi = max(maxi , end-front+1);
+                  end++;
+            }  
+            else if(count>k){
+                while(count > k){
+                    if(nums[front]==0)
+                      count--;
+                   
+                    front++;
+                    
                 }
-                else if(count<0){
-                    while(count<0){
-                        if(nums[i]==0){
-                            count++;
-                        }
-                        i++;
-                    }
-                 if(count>=0){
-                  ans = max(ans, j-i+1);
-                  }
-                }
-                j++;
+                end++;
+
             }
-            
-        }
-        return ans;
-        
+             
+         }
+         return maxi ;
     }
 };
