@@ -1,7 +1,5 @@
-class LRUCache {
-    private:
-    class node{
-        public:
+struct node{
+      
         int key;
         int val;
         node* next;
@@ -12,13 +10,19 @@ class LRUCache {
             this->val = val;
         }
         
-    };
-    node *head = new node(-1,-1);
-    node *tail = new node(-1,-1);
-    int size;
-    unordered_map<int , node*>mp; // key  , node address
-public:
-    node* addnode(int key , int val){
+};
+struct  List{
+     node* head;
+     node* tail;
+    
+    List(){
+         head = new node(-1,-1);
+         tail = new node(-1,-1);
+        head->next = tail;
+        tail->prev = head;
+       
+    }
+   node* addnode(int key , int val){
         node* temp = new node(key,val);
         temp->next = head->next;
         temp->prev = head;
@@ -31,18 +35,24 @@ public:
         temp->next->prev = temp->prev;
         delete(temp);
     }
-    
-  LRUCache(int capacity) { // initialization
+   
+
+};
+class LRUCache {
+    public:
+      int size; // size of list 
+      List* lst ;
+      unordered_map<int , node*>mp; // key  , node address
+    LRUCache(int capacity) { // initialization
          size = capacity; 
-         head->next = tail;
-         tail->prev = head;
+        lst = new List();
     }
     int get(int key) {
         if(mp.find(key) != mp.end()){
             int ans = mp[key]->val;
-            deletenode(mp[key]);
+            lst->deletenode(mp[key]);
             mp.erase(key);
-            mp[key]=addnode(key,ans);
+            mp[key]=lst->addnode(key,ans);
             return ans;
           }
         else{
@@ -52,19 +62,19 @@ public:
     
     void put(int key, int value) {
         if(mp.find(key) != mp.end()){
-             deletenode(mp[key]);
+             lst->deletenode(mp[key]);
              mp.erase(key);
-             mp[key]=addnode(key,value);
+             mp[key]=lst->addnode(key,value);
           }
         else{
             if(mp.size()<size){
-                mp[key]=addnode(key,value);
+                mp[key]=lst->addnode(key,value);
                 
             }
             else{
-                mp.erase(tail->prev->key);
-                deletenode(tail->prev);
-                mp[key]=addnode(key , value);
+                mp.erase(lst->tail->prev->key);
+                lst->deletenode(lst->tail->prev);
+                mp[key]=lst->addnode(key , value);
                
             }
         }
