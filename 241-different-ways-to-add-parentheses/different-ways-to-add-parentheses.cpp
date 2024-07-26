@@ -2,9 +2,9 @@
 class Solution {
     private:
     vector<int> solve(string s){
-        if(s.size() == 1){
-            int num=s[0]-'0';
-            return {num}; 
+        if(s.size() == 0){
+           
+            return { }; 
         }
         int n = s.size();
         vector<int>ans;
