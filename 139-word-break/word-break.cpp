@@ -12,7 +12,7 @@ class Solution {
             if(mp.find(temp)!=mp.end()){
               //  string str = s.substr(i+1,n-i+1); //substr takes n time complexity
                 if(solve(i+1,s, mp,dp) == true){
-                    return dp[idx]=true;
+                    return dp[i]=true;
                 }
             }
         }
