@@ -25,6 +25,7 @@ class Solution {
     }
 public:
     vector<vector<string>> partition(string s) {
+        // if s len <=500 then we have to use DP
        vector<vector<string>> ans;
        vector<string> temp;
        solve(0,s.size(),s,temp,ans);
