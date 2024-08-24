@@ -39,7 +39,7 @@ class Solution {
         while(!q.empty()){
             auto node= q.front().second;
             int dist = q.front().first;
-            vis[node]=true;
+           // vis[node]=true;
             q.pop();
             if( dist>k){
                 continue;
@@ -48,15 +48,15 @@ class Solution {
                 ans.push_back(node->val);
              }
             if(node->left && !vis[node->left]){
-                 //vis[node->left]=true;
+                 vis[node->left]=true;
                 q.push({dist+1 , node->left});
             }
             if(node->right && !vis[node->right]){
-                // vis[node->right]=true;
+                 vis[node->right]=true;
                 q.push({dist+1 , node->right});
             }
             if(parent[node] && !vis[parent[node]]){
-                // vis[node->right]=true;
+                 vis[parent[node]]=true;
                 q.push({dist+1 , parent[node]});
             }
             
