@@ -9,11 +9,11 @@ class Solution {
         if(temp=="")
             return false;
         long long  num = stoll(temp, nullptr, 2);
-        while(num>1){
-             if(num % 5 != 0) return false;
-              num = num/5;
-        }
-        return num==1;
+        if(num == 0)
+            return false;
+        while(num%5 == 0) 
+            num /= 5;
+        return num == 1;
     }
     bool isValid(string &s , int start , int cur){
         return notleadZero(s , start, cur)&&power5(s, start, cur);
