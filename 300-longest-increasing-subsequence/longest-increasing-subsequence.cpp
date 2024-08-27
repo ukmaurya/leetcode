@@ -26,7 +26,7 @@ public:
            caomparision , and returning in dp array 
         2) when modification in loops is not possible , like in this question 
            do changes in  storing the values */
-        int n = a.size();
+       /* int n = a.size();
         vector<vector<int>> dp(n+1,vector<int>(n+1,0));
         for(int i=n-1;i>=0;i--){
             for(int prev = i-1;prev>=-1;prev--){
@@ -39,7 +39,25 @@ public:
         }
       
 
-      return dp[0][-1+1];
+      return dp[0][-1+1]; */
+        
+        // using binary search 
+        
+        int n = a.size();
+        vector<int> temp;
+        for(int i=0;i<n;i++){
+            if(temp.empty() || temp.back() < a[i]){
+                temp.push_back(a[i]);
+            }
+            else{
+                int index= lower_bound(temp.begin() , temp.end() , a[i])-temp.begin();
+                temp[index] = a[i];
+            }
+            
+        }
+        
+        return temp.size();
+        
     }
    
 };
