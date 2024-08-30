@@ -1,49 +1,39 @@
 class Solution {
-    int n;
-    bool solve(int index, int mask , int target , int cur_sum ,vector<int>&nums , int k,vector<vector<int>>&dp){
-        
-        if(k==0){
-            if(mask==(1<<n)-1) // all elements are taken
-                return true;
-            else return false;
+    bool solve(int idx , vector<int>&nums , vector<int>&vis ,int sum ,  int count , int k, int target){
+        int n = nums.size();
+         if(count==k)
+            return true;     
+        if(sum>target )
+            return false;
+          
+        if(sum==target){
+            return solve(0, nums , vis , 0, count+1 , k  , target);
         }
-        if(dp[index][mask] != -1)
-             return dp[index][mask];
-        
-        if(cur_sum==target ){
-            return solve(0,mask,target , 0,nums,k-1,dp);
-        }
-        
-        // take every choice 
         bool ans = false;
-        for(int i = index;i<n;i++){
-            if(nums[i]<=(target-cur_sum) && !(mask&(1<<i))){
-                int newMask = mask|(1<<i);
-                ans = ans || solve(i,newMask,target,nums[i]+cur_sum , nums,k,dp);
+        for(int i=idx;i<n;i++){
+            if(!vis[i]){
+                vis[i]=1;
+                ans = ans || solve(i+1,nums , vis, sum+nums[i], count , k ,target );
+                vis[i]=0;
             }
-            if(ans == true )
-                 return dp[index][mask]=true;
-            
         }
-        return dp[index][mask]=false;
+        return ans;
     }
+    
 public:
     bool canPartitionKSubsets(vector<int>& nums, int k) {
-        
-        // bit mask dp but it involves differnet approach 
-        
-        n = nums.size();
-        int target = 0;
+        int n = nums.size();
+        int tot =0;
         for(int i=0;i<n;i++){
-            target += nums[i];
+            tot+= nums[i];
         }
-        if(target%k!=0){
+        if(tot%k != 0){
             return false;
         }
-        target = target/k;
-        int mask = 0; // no element i taken
-        vector<vector<int>> dp(n,vector<int>((1<<n),-1));
-        return solve(0,mask,target,0,nums,k,dp);
+        int target = tot/k;
+        vector<int>vis(n,0);
+       return solve(0,nums, vis ,0, 0 , k, target  );
+        
         
     }
 };
