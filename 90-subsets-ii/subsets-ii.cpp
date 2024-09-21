@@ -5,7 +5,7 @@ class Solution {
             ans.push_back(temp);
             return ;
         }
-         ans.push_back(temp);
+       
         // use starting of subset logic to avoid duplicates;
         for(int i = idx;i<n;i++){
             if(i!=idx &&nums[i]==nums[i-1])
@@ -16,7 +16,7 @@ class Solution {
            
             
         }
-       
+         ans.push_back(temp);
     }
 public:
     vector<vector<int>> subsetsWithDup(vector<int>& nums) {
