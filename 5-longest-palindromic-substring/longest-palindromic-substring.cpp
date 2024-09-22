@@ -1,68 +1,108 @@
 class Solution {
  private:
-    string preprocess(string &s) { // preporcessing is required so that we donot have to deal                                     // with even and odd len palindrome seperately 
-        int n = s.size();
-        string newstr="";
-        for(int i=0;i<n;i++){
-            newstr += '#';
-            newstr+=s[i];
-        }
-        newstr+="#";
-        return newstr;
+   string preprocess(const string &s) {
+    string t = "$";
+    for (auto c : s) {
+        t += string("#") + c;
+    }
+    t += "#^";
+    return t;
 }
-public:
-    string longestPalindrome(string s) {
-         // using machers algorithm , o(n) time
-         string newstr = preprocess(s);
-         int n = newstr.size();
-         vector<int> p(n, 0); // stores , at a perticular character , radius of palindrome 
-         int l = 0, r = 0; // left and right boundary of the current rightmost palindrome
-        
-        for(int i=0;i<n;i++){
-            int radius = 0;
-            if(i>r){ // char is outside the rightmost palindrome boundry 
-                radius = 0; 
+    string longest(string s , string t){
+        int n = s.size();
+        int m = t.size();
+        vector<vector<int>> dp(n+1 , vector<int>(m+1 , 0));
+       
+        for(int i=1;i<=n;i++){
+            for(int j=1;j<=m;j++){
+                if(s[i-1]==t[j-1]){
+                    dp[i][j] = 1+dp[i-1][j-1];
+                }
+                else{
+                    dp[i][j]=0;
+                }
+                
             }
-            else{
-                int mirror = r-i+l;
-                // mirror is inside the plaindrome boundry 
-                if(mirror>l)
-                  radius = min(p[mirror],r-i); 
-                else
-                  radius = r-i; 
-             }
-             // now there may be further matching 
-              while(i-radius>=0 && i+radius<n && newstr[i-radius]==newstr[i+radius]){
-                        radius++;
-                  }
-               radius--;  
-               p[i] = radius;
-              if(i+radius>r){ // new boundry is more than prev boundry 
-                        l = i-radius;
-                        r = i+radius;
-                        
-                    }
-             
         }
+        int maxi=0;              // Now finding the max element
+         for(int i=1;i<=m;i++)
+        {
+            for(int j=1;j<=n;j++)
+              {
+                 cout<<dp[i][j]<<" ";
+                 maxi=max(maxi,dp[i][j]);
+              }
+              cout<<endl;
+        }
+        string temp = "";
+        int sptr = -1;
+        int tptr = -1;
+        for(int i=1;i<=n;i++){
+            for(int j=1;j<=m;j++){
+                if(dp[i][j]==maxi){
+                    while(i>=1 && j>=1 && dp[i][j]!=0){
+                        temp+=t[j-1];
+                        i--;
+                        j--;
+                     }
+                    return temp;
+                
+                }
+            }
+        }
+        return temp;
+    }
     
-    int maxLen = 0;
-    int centerIndex = 0;
-    for (int i = 0; i < n ; ++i) {
+public:
+    string longestPalindrome(string str) {
+        
+        // applying manchers algorithm --- o(n) time
+         string newstr = preprocess(str);
+         int n = newstr.size();
+         vector<int> p(n, 0);
+         int l = 1, r = 1;
+    
+    for (int i = 1; i < n - 1; i++) {
+        int mirr = l+r-i;
+        p[i] = max(0, min(r - i, p[mirr]));
+        
+        while (newstr[i + p[i]] == newstr[i - p[i]]) {
+            p[i]++;
+        }
+        
+        if (i + p[i] > r) {
+            l = i - p[i];
+            r = i + p[i];
+        }
+    }
+
+    int maxLen = 0, centerIndex = 0;
+    for (int i = 1; i < n - 1; i++) {
         if (p[i] > maxLen) {
             maxLen = p[i];
             centerIndex = i;
         }
     }
-    cout<<newstr<<endl;
-    cout<<maxLen<<" "<<centerIndex<<endl;
-    int startIndex = centerIndex-maxLen;
-    int lastIndex = centerIndex+maxLen; //centerIndex+maxLen;    
-    string ans ="";
-        for(int i=startIndex;i<=lastIndex;i++){
-            if(newstr[i]!='#'){
-                ans +=newstr[i];
-            }
+
+    int startIndex = centerIndex - maxLen + 1;
+    int lastIndex = centerIndex + maxLen - 1;
+
+    string ans = "";
+    for (int i = startIndex; i <= lastIndex; i++) {
+        if (newstr[i] != '#') {
+            ans += newstr[i];
         }
-        return ans;
+    }
+    
+    return ans;
+        
+        
+        
+        // using longest common substring method it is failing 
+        // reversal of string  works in case to find palindromic subsequence not palindromic substring 
+      /*  string revs = s;
+        reverse(revs.begin() , revs.end());
+        return longest(s,revs); */
+        
     }
 };
