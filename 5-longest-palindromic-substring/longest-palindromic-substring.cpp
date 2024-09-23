@@ -65,7 +65,7 @@ public:
     for (int i = 1; i < n - 1; i++) {
         int mirr = l+r-i;
         if(i<r){
-             p[i] = max(0, min(r - i, p[mirr]));
+             p[i] =  min(r - i, p[mirr]);
         }
         while (newstr[i + p[i]] == newstr[i - p[i]]) {
             p[i]++;
