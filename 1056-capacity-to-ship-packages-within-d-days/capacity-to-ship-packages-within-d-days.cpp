@@ -49,7 +49,7 @@ public:
         int ans =-1;
         while(start<=end){
             int mid = start-(start-end)/2;
-            if(possible(mid , weights , days)){
+            if(possible(mid , weights , days)){  //in the order given by weights. so donot think of subsets 
                 ans = mid;
                 end = mid-1;
             }
