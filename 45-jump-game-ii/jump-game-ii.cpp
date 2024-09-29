@@ -6,9 +6,12 @@ public:
       int maxi = 0;
       int curMaxi = 0;
       int count = 0;
-      for(int i=0;i<n-1;i++){
+      for(int i=0;i<n;i++){
           maxi = max(maxi, i+nums[i]);
-             if(i==curMaxi){
+          if(i==n-1){
+              break;
+          }
+          if(i==curMaxi){
               count++;
               curMaxi = maxi;
           }
