@@ -10,7 +10,7 @@
  * };
  */
 class Solution {
-    int flag = true;
+   /* int flag = true;
     int solve(TreeNode* root){
         if(root==NULL){
             return 0;
@@ -30,12 +30,37 @@ class Solution {
             
         return max(left,right)+1;    
         
-    }
+    } */
+   int solve(TreeNode* root){
+        if(root==NULL){
+            return 0;
+        }
+        
+        int left = solve(root->left);
+        int right = solve(root->right);
+        if(left==-1 || right==-1){ // subtree is not balanced
+           return -1;
+        }
+        if(abs(left-right)>1){ // current node is not balanced
+            return -1; 
+        }
+        return max(left,right)+1;//if balanced then return height
+     
+   }
 public:
     bool isBalanced(TreeNode* root) {
+        // int ans =  solve(root);
+        // if(flag==true)
+        //     return true;
+        // return false;
+        
+        // without flag and pruning the recursive calls
+        // we need a bool return type function but for height we need a int so , we conseder a integer value as false and true;
         int ans =  solve(root);
-        if(flag==true)
-            return true;
-        return false;
+        if(ans==-1){
+            return false;
+        }
+        return true;
+        
     }
 };
