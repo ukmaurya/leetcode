@@ -2,25 +2,25 @@
 class Solution {
     
     int dp[30][2][2];
-    int solve(int idx , string &nums , bool smaller , bool prevOne){
+    int solve(int idx , string &nums , bool largest , bool prevOne){
         int n = nums.size();
         if(idx==n){
             return 1;
         }
-        if(dp[idx][smaller][prevOne]!=-1){
-            return dp[idx][smaller][prevOne];
+        if(dp[idx][largest][prevOne]!=-1){
+            return dp[idx][largest][prevOne];
         }
         
-        int limit = (smaller==true)?nums[idx]-'0':1;
+        int limit = (largest==true)?nums[idx]-'0':1;
         int ans = 0;
         for(int i=0;i<=limit;i++){
             if(i==1 && prevOne==true){
                 continue;
             }
-            bool newSmaller = smaller&&(i==limit);
-            ans += solve(idx+1 , nums ,newSmaller, ((i==1)?true:false));
+            bool newlarge =largest&&(i==limit);
+            ans += solve(idx+1 , nums ,newlarge, ((i==1)?true:false));
         }
-        return dp[idx][smaller][prevOne]= ans;
+        return dp[idx][largest][prevOne]= ans;
         
         
     }
