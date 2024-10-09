@@ -35,7 +35,7 @@ public:
         vector<vector<int>> dp(n + 1, vector<int>(2, 0));
         dp[n-1][0] = nums[n-1];
         for(int i=n-2;i>=0;i--){
-            for(int j=0;j<2;j++){
+            for(int j=0;j<2;j++){ // expressiong false and true using 1 and 0 
                  int ntake = dp[i+1][j]; //  solve(idx+1 , nums , first,dp);
                  int take = dp[i+2][j]+nums[i]; // solve(idx+2 , nums,first,dp)+nums[idx];
                 if(i==0 && j==0){ // very imp condition
