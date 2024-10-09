@@ -26,9 +26,24 @@ class Solution {
 public:
     int rob(vector<int>& nums) {
         // applying second approach
+        // int n = nums.size();
+        // vector<vector<int>>dp(n+1 , vector<int>(2,-1));
+        // bool first = false;
+        // return solve(0,nums, first,dp);
+        // Initialize the DP table
         int n = nums.size();
-        vector<vector<int>>dp(n+1 , vector<int>(2,-1));
-        bool first = false;
-        return solve(0,nums, first,dp);
+        vector<vector<int>> dp(n + 1, vector<int>(2, 0));
+        dp[n-1][0] = nums[n-1];
+        for(int i=n-2;i>=0;i--){
+            for(int j=0;j<2;j++){
+                 int ntake = dp[i+1][j]; //  solve(idx+1 , nums , first,dp);
+                 int take = dp[i+2][j]+nums[i]; // solve(idx+2 , nums,first,dp)+nums[idx];
+                if(i==0 && j==0){ // very imp condition
+                    take = dp[i+1][j];
+                }
+                 dp[i][j]= max(take , ntake);
+            }
+        }
+        return max(dp[0][0],dp[0][1]);
     }
 };
