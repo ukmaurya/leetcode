@@ -24,28 +24,57 @@ public:
             // vector<vector<int>> dp(a,vector<int>(b,-1));
             // return solve(a-1,b-1,dp , obstacleGrid);
 
+        //     int a = obstacleGrid.size();
+        //     int b = obstacleGrid[0].size();
+        //     if(obstacleGrid[a-1][b-1]==1 || obstacleGrid[0][0]==1) return 0;
+        //     vector<vector<int>> dp(a+1,vector<int>(b+1,0));
+        //     dp[0][0]=1;
+        //     for(int i=0;i<a;i++){
+
+        //         for(int j=0;j<b;j++){
+        //             if((i==0 &&j==0) || obstacleGrid[i][j]==1){
+        //                 continue;
+        //             }
+        //             int up = 0;
+        //             if(i-1>=0)
+        //               up = dp[i-1][j];
+
+        //             int left =0;
+        //             if(j-1>=0)
+        //               left = dp[i][j-1];
+        //             dp[i][j] = left + up;
+        //         }
+        //     }
+
+        // return dp[a-1][b-1];
             int a = obstacleGrid.size();
             int b = obstacleGrid[0].size();
             if(obstacleGrid[a-1][b-1]==1 || obstacleGrid[0][0]==1) return 0;
-            vector<vector<int>> dp(a+1,vector<int>(b+1,0));
-            dp[0][0]=1;
+
+            vector<int> last(b+1 , 0);
             for(int i=0;i<a;i++){
+                vector<int> cur(b+1);
                 for(int j=0;j<b;j++){
-                    if((i==0 &&j==0) || obstacleGrid[i][j]==1){
+                    if(obstacleGrid[i][j]==1)
+                      continue;
+                    if((i==0 &&j==0) ){
+                        cur[j]=1;
                         continue;
                     }
                     int up = 0;
                     if(i-1>=0)
-                      up = dp[i-1][j];
+                      up = last[j];
 
                     int left =0;
                     if(j-1>=0)
-                      left = dp[i][j-1];
-                    dp[i][j] = left + up;
+                      left = cur[j-1];
+                    cur[j] = left + up;
                 }
+                last = cur;
             }
+        
 
-        return dp[a-1][b-1];
+         return last[b-1];
 
     }
 };
