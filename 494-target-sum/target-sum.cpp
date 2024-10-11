@@ -34,13 +34,41 @@ public:
         //  vector<vector<int>> dp(n,vector<int>(req+1,-1));
         //  return solve(n-1,nums,req,dp);    
 
+      
+      
+      
+      
         // second approach
-         int n = nums.size();
-        int sum = accumulate(nums.begin(), nums.end(), 0);
-        int offset = sum; // offset to handle negative indices
+        //  int n = nums.size();
+        // int sum = accumulate(nums.begin(), nums.end(), 0);
+        // int offset = sum; // offset to handle negative indices
 
-        vector<vector<int>> dp(n, vector<int>(2 * sum + 1, -1)); // size adjusted for negative ans
-        return newApproach(nums, target, 0, 0, dp, offset);
+        // vector<vector<int>> dp(n, vector<int>(2 * sum + 1, -1)); // size adjusted for negative ans
+        // return newApproach(nums, target, 0, 0, dp, offset);
+
+         int n = nums.size();
+         int sum = accumulate(nums.begin(), nums.end(), 0);
+         int offset = sum;
+
+         if (target > sum || target < -sum) return 0; // Check if target is out of range
+         vector<vector<int>> dp(n+1, vector<int>(2 * sum + 1, 0));
+         
+         dp[n][0+offset]=1; // initially sum =0 
+        for(int i=n-1;i>=0;i--){
+            for(int j=-sum;j<=sum;j++){ // to iterate all possible sum 
+               int pos = 0;
+              if(j+nums[i]+offset < 2*sum+1)
+                pos = dp[i+1][j+nums[i]+offset];
+              int neg =0;
+              if(j-nums[i]+offset >=0 ) 
+                neg = dp[i+1][j-nums[i]+offset];
+              dp[i][j+offset] = pos+neg;
+            }
+        }
+
+       return dp[0][target+offset];
+
+
 
     }
      int newApproach(vector<int>& nums, int target, int index, int ans, vector<vector<int>> &dp, int offset) {
