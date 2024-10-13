@@ -57,17 +57,33 @@ public:
            return solve(0,-1,words ,dp); */
         
           int n = words.size();
-        vector<vector<int>> dp(n+1,vector<int>(n+1,0));
-          for(int i=n-1;i>=0;i--){
+        // vector<vector<int>> dp(n+1,vector<int>(n+1,0));
+        //   for(int i=n-1;i>=0;i--){
+        //       for(int last = i-1;last>=-1;last--){
+        //           int take = 0;
+        //           if(last==-1 || isValid(words[last] , words[i])){
+        //               take = 1+dp[i+1][i+1];
+        //           }
+        //           int ntake = dp[i+1][last+1];
+        //           dp[i][last+1] = max(take ,ntake);
+        //       }
+        //   }
+        // return dp[0][-1+1];
+
+        // space optimisation 
+        vector<int> down(n+1,0);
+         for(int i=n-1;i>=0;i--){
+            vector<int> cur(n+1,0);
               for(int last = i-1;last>=-1;last--){
                   int take = 0;
                   if(last==-1 || isValid(words[last] , words[i])){
-                      take = 1+dp[i+1][i+1];
+                      take = 1+down[i+1];
                   }
-                  int ntake = dp[i+1][last+1];
-                  dp[i][last+1] = max(take ,ntake);
+                  int ntake = down[last+1];
+                  cur[last+1] = max(take ,ntake);
               }
+              down = cur;
           }
-        return dp[0][-1+1];
+        return down[0];
     }
 };
