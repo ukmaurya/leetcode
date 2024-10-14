@@ -1,7 +1,7 @@
 class Solution {
    
     private:
-    void isPalindrome(string &s,vector<vector<bool>>&palin  ){
+    void isPalindrome(string &s,vector<vector<bool>>&dp  ){
      /*   while(i<j){
             if(s[i]!=s[j]) 
                return false;
@@ -14,30 +14,55 @@ class Solution {
         // to reduce to o(n^2) we have to precompute the palindrome )
         // we will store the every substring is palindrime or not 
         
-         int n = s.size();
-        
-         // odd len palindrome
-         for(int i=0;i<n;i++){
-            palin[i][i]=true;
-            for(int j=i-1,k=i+1 ; j>=0 && k<n ; j--,k++){
-                if(s[j]==s[k]){
-                    palin[j][k]=true;
-                }
-                else break;
-            }
-         }
-         // even len palindrome
-         for(int i=0;i<n;i++){
-            palin[i][i]=true;
-            for(int j=i,k=i+1 ; j>=0 && k<n ; j--,k++){
-                if(s[j]==s[k]){
-                    palin[j][k]=true;
-                }
-                else break;
-            }
-         }
+        //  int n = s.size();
+        //  for(int i =0;i<n;i++){ // intitialising 1 len palindrome
+        //     palin[i][i]= true;
+        //  }
+        //  for(int i=0;i<n-1;i++){ // inititalising 2 len palindrome 
+        //     if(s[i]==s[i+1])
+        //      palin[i][i+1] = true;
+           
+        //  }
+        //  for(int len =2;len<n;len++){
+        //     for(int i=0,j=len;i<n,j<n;i++,j++){
+        //         if(s[i]==s[j]){
+        //             if(palin[i+1][j-1]==true){
+        //                 palin[i][j] = true;
+        //             }
+        //         }
+        //     }
+        //  }
+        //  for(int i=0;i<n;i++){
+        //     for(int j=0;j<n;j++){
+        //         cout<<palin[i][j]<<" ";
+        //     }
+        //     cout<<endl;
+        //  }
 
-        return ;
+        // return ;
+        int n = s.size();
+        for(int gap=0;gap<n;gap++){
+            for(int i=0,j=gap; j<n ;i++,j++){
+                if(i==j ){
+                    dp[i][j]= true;
+                  
+                }
+                else if(j == i+1){
+                    dp[i][j] = (s[i]==s[j])?true:false;
+                  
+                }
+                else if(s[i]==s[j]){
+                    if(dp[i+1][j-1]==true){
+                        dp[i][j] = true;
+                      
+                    }
+                    else{
+                        dp[i][j]= false;
+                    }
+                }
+                 
+            }
+        }
     }
 public:
     int minCut(string s){
