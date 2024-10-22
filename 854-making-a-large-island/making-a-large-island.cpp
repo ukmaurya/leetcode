@@ -1,96 +1,108 @@
-class DisjointSet{
-    public: 
-    vector<int> parent , size;
-    
-     DisjointSet(int n ){
-        parent.resize(n+1);
-        size.resize(n+1 , 1);
-        for(int i=0;i<=n;i++){
-            parent[i]=i;
+class disjointset {
+public:
+    vector<int> parent, size;
+    disjointset(int n) {
+        parent.resize(n + 1);
+        size.resize(n + 1 ,1);
+        for (int i = 0; i <= n; i++) {
+            parent[i] = i;
         }
-     }
-     
-    void unionSize(int u , int v){
-        int ulp_u = ultiPar(u);
-        int ulp_v = ultiPar(v);
-        if(ulp_u != ulp_v){
-            if(size[ulp_u] <= size[ulp_v]){
-                 parent[ulp_u] = parent[ulp_v];
-                 size[ulp_v] += size[ulp_u];
-            }
-            else{
-                 parent[ulp_v] = parent[ulp_u];
-                 size[ulp_u] += size[ulp_v];
-            }
+    }
+    int ultiPar(int node) {
+        if (parent[node] == node) {
+            return node;
         }
-
-    } 
-    int ultiPar(int node){
-        if(parent[node] == node){
-             return node;
+        return parent[node] = ultiPar(parent[node]);
+    }
+    void unionSize(int u, int v) {
+        int x = ultiPar(u);
+        int y = ultiPar(v);
+        if (x == y) {
+            return;
         }
-        else{
-            return parent[node] = ultiPar(parent[node]); // path compresion
+        if (size[x] <= size[y]) {
+            parent[x] = y;
+            size[y] += size[x];
+        } else {
+            parent[y] = x;
+            size[x] += size[y];
         }
     }
 };
 class Solution {
+
+private:
+    void makeComponent(int row, int col, vector<vector<int>>& grid,
+                       vector<vector<int>>& vis, disjointset& ds) {
+        int n = grid.size();
+        vis[row][col] = 1;
+        int dx[] = {0, 1, 0, -1};
+        int dy[] = {1, 0, -1, 0};
+        for (int k = 0; k < 4; k++) {
+            int r = row + dx[k];
+            int c = col + dy[k];
+            if (r >= 0 && r < n && c >= 0 && c < n && vis[r][c] == 0 &&
+                grid[r][c] == 1) {
+                int parent = col * n + row;
+                int child = c * n + r;
+                int p1 = ds.ultiPar(parent);
+                int p2 = ds.ultiPar(child);
+                if (p1 != p2) {
+                    ds.unionSize(parent, child);
+                }
+                makeComponent(r, c, grid, vis, ds);
+            }
+        }
+    }
+
 public:
     int largestIsland(vector<vector<int>>& grid) {
         int n = grid.size();
-        DisjointSet ds(n*n);
-        // connecting the islands
-        int dx[] = {0,1,0,-1};
-        int dy[] ={1,0,-1,0};
-       
-        for(int i=0;i<n;i++){
-            for(int j=0;j<n;j++){
-                if(grid[i][j]==1){
-                    int node = j*n+i;
-                    for(int k=0;k<4;k++){
-                        int adjR = i+dx[k];
-                        int adjC = j+dy[k];
-                        if(adjR>=0&&adjR<n && adjC>=0 &&adjC<n && grid[adjR][adjC]==1){
-                            int adjnode = adjC*n+adjR;
-                            int x = ds.ultiPar(adjnode);
-                            int y = ds.ultiPar(node);
-                            if(x==y){
-                                continue;
-                            }
-                            else{
-                                ds.unionSize(x,y);
-                            }
-                        }
-                    }
+        disjointset ds(n * n);
+        vector<vector<int>> vis(n, vector<int>(n, 0));
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (vis[i][j] == 0 && grid[i][j] == 1) {
+                    makeComponent(i, j, grid, vis, ds);
                 }
             }
         }
-        int maxi =0;
-        for(int i=0;i<n;i++){
-            for(int j=0;j<n;j++){
-                int s =0;
-                if(grid[i][j]==0){
-                    set<int> st;
-                    for(int k=0;k<4;k++){
-                        int adjR = i+dx[k];
-                        int adjC = j+dy[k];
-                        if(adjR>=0&&adjR<n && adjC>=0 &&adjC<n && grid[adjR][adjC]==1){
-                            int adjnode = adjC*n+adjR;
-                            int x = ds.ultiPar(adjnode);
-                            st.insert(x);
+
+        int ans = 0;
+        int countZero = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                 unordered_set<int> st;
+                if (grid[i][j] == 0) { // try changing it
+                     countZero++;
+                    int dx[] = {0, 1, 0, -1};
+                    int dy[] = {1, 0, -1, 0};
+
+                    for (int k = 0; k < 4; k++) {
+                        int row = i + dx[k];
+                        int col = j + dy[k];
+                        if (row >= 0 && row < n && col >= 0 && col < n && grid[row][col]==1) {
+                            int node = n * col + row;
+                            int parent = ds.ultiPar(node);
+                            st.insert(parent);
                         }
                     }
-                    for(auto it: st){
-                        s += ds.size[it];
+                    int compoSize = 0;
+                    for (auto it : st) {
+                        compoSize += ds.size[it];
+                        cout<<compoSize<<" ";
                     }
-                    maxi = max(maxi , s+1);
+                
+                    ans = max(ans, 1+compoSize);
                 }
             }
         }
-         for(int i=0;i<n*n;i++){ //for edge case when the grid have all ones 
-          maxi = max(maxi , ds.size[i]);
-       }
-        
-        return maxi ;
+        if(countZero==0){ // no zero in grid
+            return n*n;
+        }
+        else if(countZero == n*n){
+            return 1;
+    }
+        return ans;
     }
 };
