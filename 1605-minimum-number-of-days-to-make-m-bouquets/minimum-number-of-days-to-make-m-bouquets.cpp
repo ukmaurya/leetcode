@@ -1,41 +1,41 @@
 class Solution {
-    bool isPossible(int mid , vector<int>& bloomDay,int m , int k){
+    bool poss(vector<int>&arr , int k , int m , int mid ){
+        int n = arr.size();
         int count=0;
-        int cnt =0;
-        int n = bloomDay.size();
+        int req =0;
         for(int i=0;i<n;i++){
-            if(bloomDay[i]<=mid){
-                cnt++;
-                if(cnt==k){
-                    count++;
-                    cnt=0;
+            if(arr[i]<= mid){
+                count++;
+                if(count==k){
+                    count=0;
+                     req++;
                 }
-                
             }
             else{
-                cnt=0;
+                count=0;
             }
         }
-        if(count>=m){
+        if(req >= m){
             return true;
         }
         return false;
+
     }
 public:
     int minDays(vector<int>& bloomDay, int m, int k) {
         int n = bloomDay.size();
-        int start= INT_MAX;
-        int end = INT_MIN;
+        int maxi = INT_MIN;
         for(int i=0;i<n;i++){
-            start = min(start , bloomDay[i]);
-            end = max(end , bloomDay[i]);
+            maxi = max(maxi, bloomDay[i]);
         }
-        int ans = -1;
+        int start = 0;
+        int end = maxi;
+        int ans =-1;
         while(start<= end){
-            int mid = start+(end-start)/2;
-            if(isPossible(mid, bloomDay,m,k)){
-                ans = mid;
-                end = mid-1;
+            int mid = (start+end)/2;
+            if(poss(bloomDay , k ,m ,mid)){
+              ans = mid;
+              end = mid-1;
             }
             else{
                 start = mid+1;
