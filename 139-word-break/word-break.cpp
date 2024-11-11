@@ -20,7 +20,7 @@ class Solution {
     }
 public:
     bool wordBreak(string s, vector<string>& wordDict) {
-         unordered_map<string , int > mp;  //   taking n! time  without dp
+         unordered_map<string , int > mp;  //   taking 2^n time  without dp
          for(auto it :wordDict){
              mp[it]++;
          }
