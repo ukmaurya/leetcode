@@ -30,14 +30,17 @@ class Solution {
                   if(isleaves(it.first)){
                       height[it.first]=1;
                   }
-                   st.push({it.first , 2});
-                  if(it.first->right)
-                   st.push({it.first->right,1});
+                  st.push({it.first , 2});
                   if(it.first->left)
                     st.push({it.first->left , 1});
                  
               }
               else if(it.second==2){
+                  st.push({it.first , 3});
+                  if(it.first->right)
+                     st.push({it.first->right,1});
+              }
+              else if(it.second==3){
                   height[it.first] = max(height[it.first->left] , height[it.first->right])+1;
 
               }
