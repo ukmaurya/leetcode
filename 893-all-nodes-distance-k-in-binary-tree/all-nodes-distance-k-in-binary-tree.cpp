@@ -8,60 +8,47 @@
  * };
  */
 class Solution {
-    private:
-   void preorder(TreeNode* root , unordered_map<TreeNode* , TreeNode* > &parent ){
-        if(root==NULL){
-            return ;
-        }
-         
-        if(root->left){
-            parent[root->left]=root;
-        }
-        if(root->right){
-            parent[root->right]=root;
-        }
-        preorder(root->left , parent);
-        preorder(root->right , parent);
-    }
- public:
-    vector<int> distanceK(TreeNode* root, TreeNode* target, int k) {
+    unordered_map<TreeNode* , TreeNode*> parent;
+   void makeParent(TreeNode* root , TreeNode* par){
+        if(root==NULL)
+          return;
        
-          unordered_map<TreeNode* , TreeNode* > parent;
-          parent[root]=NULL;
-          preorder(root , parent); // making of parent pointer 
-        
-        // apply bfs 
-        queue<pair<int,TreeNode*>> q;
-        q.push({0,target});
+        parent[root] = par;
+        makeParent(root->left , root);
+        makeParent(root->right,root);
+                   
+    }
+public:
+    vector<int> distanceK(TreeNode* root, TreeNode* target, int k) {
+        makeParent(root , NULL);
+        // now apply bfs
+        queue<pair<TreeNode* , int >> q;
+        unordered_map<TreeNode* , bool> vis;
         vector<int> ans;
-        unordered_map<TreeNode* , bool > vis;
+        q.push({target , 0});
         vis[target] = true;
         while(!q.empty()){
-            auto node= q.front().second;
-            int dist = q.front().first;
-           // vis[node]=true;
+            auto it = q.front();
             q.pop();
-            if( dist>k){
-                continue;
-             }
-            if( dist == k){
-                ans.push_back(node->val);
-             }
-            if(node->left && !vis[node->left]){
-                 vis[node->left]=true;
-                q.push({dist+1 , node->left});
+            if(it.second==k)
+              ans.push_back(it.first->val);
+            else if(it.second>k)
+              continue;  
+            if(it.first->left && vis[it.first->left]==false){
+                vis[it.first->left]=true;
+                q.push({it.first->left , it.second+1});
+            }  
+            if(it.first->right&& vis[it.first->right]==false){
+                vis[it.first->right]=true;
+                q.push({it.first->right, it.second+1});
+            } 
+            if(parent[it.first] && vis[parent[it.first]]==false){
+                  vis[parent[it.first]]= true;
+                  q.push({parent[it.first], it.second+1});
             }
-            if(node->right && !vis[node->right]){
-                 vis[node->right]=true;
-                q.push({dist+1 , node->right});
-            }
-            if(parent[node] && !vis[parent[node]]){
-                 vis[parent[node]]=true;
-                q.push({dist+1 , parent[node]});
-            }
-            
+
+
         }
-         
-       return ans;
+        return ans;
     }
 };
