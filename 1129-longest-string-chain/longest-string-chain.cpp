@@ -1,6 +1,6 @@
 class Solution {
     private: 
-    bool static comp(string &s1 , string &s2){
+    static bool comp(string &s1 , string &s2){ // for calling static members , creation of coject of that class is not required , it can access only static members 
         if(s1.size() < s2.size())
             return true;
         return false;    
